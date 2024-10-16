@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#10000099"
+    tools:context=".ChatActivity">
+
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:background="@color/link_video_orange"
+        tools:text="Jhon Smith"
+        android:padding="16dp"
+
+        />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewMessages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/textViewTitle"
+        app:layout_constraintBottom_toTopOf="@id/editTextMessage"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/my_message_item"
+        />
+
+    <EditText
+        android:id="@+id/editTextMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:hint="@string/massage_hint"
+        android:inputType="textMultiLine"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:paddingEnd="48dp"
+        tools:text="Очень очень очень очень ь очень очень очень очень очень очень очень очень очень очень длинный текст"
+        />
+
+    <ImageView
+        android:id="@+id/imageViewSendMessage"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toBottomOf="@id/editTextMessage"
+        app:layout_constraintEnd_toEndOf="@id/editTextMessage"
+        app:layout_constraintTop_toTopOf="@+id/editTextMessage"
+        app:tint="@color/link_video_orange"
+        app:srcCompat="@android:drawable/ic_menu_send" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
