@@ -49,7 +49,7 @@ public class ChatActivity extends AppCompatActivity {
         initExtra();
 
 
-        viewModelFactory = new ChatViewModelFactory(currentUserId,otherUserId, accessToken, refreshToken);
+        viewModelFactory = new ChatViewModelFactory(getApplication(),currentUserId,otherUserId, accessToken, refreshToken);
         viewModel = new ViewModelProvider(this, viewModelFactory).get(ChatViewModel.class);
 
         textViewTitle.setText(otherUserName);
@@ -71,7 +71,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void observeViewModel(){
-        viewModel.getMessages().observe(this, new Observer<List<Message>>() {
+        viewModel.getMessagesFromDb(currentUserId,otherUserId).observe(this, new Observer<List<Message>>() {
             @Override
             public void onChanged(List<Message> messages) {
                 messagesAdapter.setMessages(messages);

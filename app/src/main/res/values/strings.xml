@@ -1,9 +1,14 @@
 <resources>
     <string name="app_name">MessengerLinkVideo</string>
     <string name="messenger_titel">Messenger</string>
-    <string name="login_hint">Login:</string>
-    <string name="password">Password:</string>
+    <string name="login_hint">Login</string>
+    <string name="password">Password</string>
     <string name="login_button">LOGIN</string>
     <string name="register">Register</string>
     <string name="massage_hint">Сообщение:</string>
+    <string name="registration">Registration</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="success_reg">Регистрация выполнена успешно!</string>
+    <string name="error_message_reg">Ошибка регистрации: %s</string>
+    <string name="error_message_auth">Ошибка авторизации: %s</string>
 </resources>

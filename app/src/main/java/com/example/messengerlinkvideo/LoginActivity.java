@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         viewModel.getError().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String error) {
-                Toast.makeText(LoginActivity.this, String.format("Ошибка авторизации: %s",error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, String.format(getString(R.string.error_message_auth),error), Toast.LENGTH_SHORT).show();
             }
         });
         viewModel.getIsLogin().observe(this, new Observer<Boolean>() {
@@ -67,6 +67,14 @@ public class LoginActivity extends AppCompatActivity {
                 String login = editTextLogin.getText().toString().trim();
                 String password = editTextPassword.getText().toString().trim();
                 viewModel.login(login,password);
+            }
+        });
+
+        textViewRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = RegistrationActivity.newIntent(LoginActivity.this);
+                startActivity(intent);
             }
         });
 

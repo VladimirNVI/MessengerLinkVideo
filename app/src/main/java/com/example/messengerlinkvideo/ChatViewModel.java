@@ -1,8 +1,10 @@
 package com.example.messengerlinkvideo;
 
+import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -21,12 +23,12 @@ import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class ChatViewModel extends ViewModel {
+public class ChatViewModel extends AndroidViewModel {
 
-    private final MutableLiveData<List<Message>> messages = new MutableLiveData<>();
     private final MutableLiveData<Boolean> messageSent = new MutableLiveData<>();
     private final MutableLiveData<String> error = new MutableLiveData<>();
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final MessageDao messageDao;
 
     private static final String TAG = "ChatViewModel";
     private final int currentUserId;
@@ -35,16 +37,14 @@ public class ChatViewModel extends ViewModel {
     private String refreshToken;
 
 
-    public ChatViewModel(int currentUserId, int otherUserId, String accessToken, String refreshToken) {
+    public ChatViewModel(@NonNull Application application, int currentUserId, int otherUserId, String accessToken, String refreshToken) {
+        super(application);
         this.currentUserId = currentUserId;
         this.otherUserId = otherUserId;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        messageDao = MessageDatabase.getInstance(application).messageDao();
         getMessage();
-    }
-
-    public LiveData<List<Message>> getMessages() {
-        return messages;
     }
 
     public LiveData<Boolean> getMessageSent() {
@@ -62,9 +62,12 @@ public class ChatViewModel extends ViewModel {
                 .subscribe(new Consumer<List<Message>>() {
                     @Override
                     public void accept(List<Message> messagesResponse) throws Throwable {
-                        ArrayList<Message> sortMessages = new ArrayList<>(messagesResponse);
+                        List<Message> sortMessages = new ArrayList<>(messagesResponse);
                         sortMessages.sort(Comparator.comparing(Message::getDate));
-                        messages.setValue(sortMessages);
+
+                        for (Message message:sortMessages) {
+                            insertMessage(message);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -75,6 +78,28 @@ public class ChatViewModel extends ViewModel {
                 });
         compositeDisposable.add(disposable);
     }
+
+    public void insertMessage (Message message){
+        Disposable disposable = messageDao.insertMassage(message)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action() {
+                    @Override
+                    public void run() throws Throwable {
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Throwable {
+                        Log.d(TAG,throwable.toString());
+                    }
+                });
+        compositeDisposable.add(disposable);
+    }
+
+    public LiveData <List <Message>> getMessagesFromDb(int fromUserId, int toUserId ){
+        return messageDao.getAllMassage(fromUserId, toUserId);
+    }
+
 
     private void refreshAccessToken(String refresh) {
 
@@ -127,6 +152,12 @@ public class ChatViewModel extends ViewModel {
 
 
     }
+
+    //Работа с WebSocet
+
+
+
+
 
     @Override
     protected void onCleared() {
